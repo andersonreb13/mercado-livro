@@ -21,27 +21,31 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/customers")
 class CustomerController (val customerService: CustomerService) {
 
-
-    @GetMapping
-    fun getAll(@RequestParam name: String?): List<CustomerModel> {
-        return customerService.getAll(name)
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody customer: PostCustomerRequest) {
         print(customerService.create(customer.toCustomerModel()))
     }
 
+    @GetMapping
+    fun getAll(@RequestParam name: String?): List<CustomerModel> {
+        return customerService.getAll(name)
+    }
+
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Int): CustomerModel {
+        return customerService.getCustomer(id)
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun update(@PathVariable id: String, @RequestBody customer: PutCustomerRequest) {
+    fun update(@PathVariable id: Int, @RequestBody customer: PutCustomerRequest) {
         return customerService.update(customer.toCustomerModel(id))
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable id: String) {
+    fun delete(@PathVariable id: Int) {
         customerService.delete(id)
     }
 }
